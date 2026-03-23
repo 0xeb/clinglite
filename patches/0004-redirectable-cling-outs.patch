@@ -1,0 +1,54 @@
+diff --git a/include/cling/Utils/Output.h b/include/cling/Utils/Output.h
+index 59dd4f31..35e58c20 100644
+--- a/include/cling/Utils/Output.h
++++ b/include/cling/Utils/Output.h
+@@ -17,9 +17,13 @@
+ namespace cling {
+   namespace utils {
+     ///\brief The 'stdout' stream. llvm::raw_ostream wrapper of std::cout
+-    ///
++    /// Can be redirected via setOuts().
+     llvm::raw_ostream& outs();
+ 
++    ///\brief Redirect cling::outs() to a custom stream.
++    /// Pass nullptr to restore the default (std::cout).
++    void setOuts(llvm::raw_ostream* s);
++
+     ///\brief The 'stderr' stream. llvm::raw_ostream wrapper of std::cerr
+     ///
+     llvm::raw_ostream& errs();
+@@ -69,6 +73,7 @@ namespace cling {
+     typedef outstring<0>    stdstrstream;
+   }
+   using utils::outs;
++  using utils::setOuts;
+   using utils::errs;
+   using utils::log;
+ 
+diff --git a/lib/Utils/Output.cpp b/lib/Utils/Output.cpp
+index 7661fad7..97a65fb9 100644
+--- a/lib/Utils/Output.cpp
++++ b/lib/Utils/Output.cpp
+@@ -17,7 +17,11 @@
+ 
+ namespace cling {
+   namespace utils {
++    static llvm::raw_ostream* sOutOverride = nullptr;
++
+     llvm::raw_ostream& outs() {
++      if (sOutOverride)
++        return *sOutOverride;
+       static llvm::raw_os_ostream sOut(std::cout);
+       sOut.SetUnbuffered();
+       if (llvm::sys::Process::StandardOutIsDisplayed())
+@@ -25,6 +29,10 @@ namespace cling {
+       return sOut;
+     }
+ 
++    void setOuts(llvm::raw_ostream* s) {
++      sOutOverride = s;
++    }
++
+     llvm::raw_ostream& errs() {
+       static llvm::raw_os_ostream sErr(std::cerr);
+       sErr.SetUnbuffered();

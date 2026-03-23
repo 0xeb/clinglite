@@ -1,0 +1,29 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: clinglite <clinglite@users.noreply.github.com>
+Date: Thu, 20 Mar 2026 00:00:00 +0000
+Subject: [PATCH] Build clingUserInterface unconditionally
+
+The UserInterface library is gated behind CLING_INCLUDE_TESTS, but it
+is a runtime dependency of cling.exe, libcling.dll, libclingJupyter.dll,
+and clinglite. When building with -DLLVM_INCLUDE_TESTS=OFF (which
+propagates to CLING_INCLUDE_TESTS=OFF), clingUserInterface is silently
+skipped, causing link failures at the very end of the build.
+
+Remove the CLING_INCLUDE_TESTS guard so UserInterface is always built.
+---
+ lib/CMakeLists.txt | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index eb29252..63d4f1e 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -8,7 +8,5 @@
+ 
+ add_subdirectory(Interpreter)
+ add_subdirectory(MetaProcessor)
+-if(CLING_INCLUDE_TESTS)
+-   add_subdirectory(UserInterface)
+-endif()
++add_subdirectory(UserInterface)
+ add_subdirectory(Utils)

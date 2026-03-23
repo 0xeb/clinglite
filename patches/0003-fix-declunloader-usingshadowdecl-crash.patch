@@ -1,0 +1,40 @@
+From a6721f712c95e96ac1e9811dbc0e084b6d2e59ab Mon Sep 17 00:00:00 2001
+From: Elias Bachaalany <elias.bachaalany@gmail.com>
+Date: Wed, 18 Feb 2026 18:14:16 -0800
+Subject: [PATCH] Fix UsingShadowDecl crash in DeclUnloader during transaction
+ unloading
+
+Enable VisitRedeclarable for UsingShadowDecl (was FIXME'd out for newer
+Clang) and guard removeShadowDecl against corrupted shadow chains that
+occur when unloading implicit template instantiations.
+---
+ lib/Interpreter/DeclUnloader.cpp | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/lib/Interpreter/DeclUnloader.cpp b/lib/Interpreter/DeclUnloader.cpp
+index 37a60a0a..783685ef 100644
+--- a/lib/Interpreter/DeclUnloader.cpp
++++ b/lib/Interpreter/DeclUnloader.cpp
+@@ -580,12 +580,16 @@ namespace cling {
+   bool DeclUnloader::VisitUsingShadowDecl(UsingShadowDecl* USD) {
+     // UsingShadowDecl: NamedDecl, Redeclarable
+     bool Successful = true;
+-    // FIXME: This is needed when we have newest clang:
+-    //Successful = VisitRedeclarable(USD, USD->getDeclContext());
++    Successful = VisitRedeclarable(USD, USD->getDeclContext());
+     Successful &= VisitNamedDecl(USD);
+ 
+     // Unregister from the using decl that it shadows.
+-    USD->getIntroducer()->removeShadowDecl(USD);
++    // Guard: the introducer's shadow chain may reference already-freed
++    // declarations when unloading implicit template instantiations.
++    if (auto* Introducer = USD->getIntroducer()) {
++      if (llvm::is_contained(Introducer->shadows(), USD))
++        Introducer->removeShadowDecl(USD);
++    }
+ 
+     return Successful;
+   }
+-- 
+2.43.0
+

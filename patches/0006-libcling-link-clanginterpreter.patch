@@ -1,0 +1,12 @@
+diff --git a/tools/libcling/CMakeLists.txt b/tools/libcling/CMakeLists.txt
+index 3d119b90..7d3b9d90 100644
+--- a/tools/libcling/CMakeLists.txt
++++ b/tools/libcling/CMakeLists.txt
+@@ -22,6 +22,7 @@ set(LIBS
+   clangCodeGen
+   clangBasic
+   clangEdit
++  clangInterpreter
+ 
+   clingUtils
+ )

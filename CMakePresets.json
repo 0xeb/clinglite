@@ -1,0 +1,65 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 20 },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_STANDARD": "17",
+        "CLING_BUILD_DIR": "${sourceDir}/build-cling"
+      }
+    },
+    {
+      "name": "vs-static",
+      "inherits": "base",
+      "displayName": "VS 2022 — Static",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "${sourceDir}/build-vs-static",
+      "architecture": { "value": "x64", "strategy": "set" },
+      "cacheVariables": { "CLINGLITE_BUILD_SHARED": "OFF" }
+    },
+    {
+      "name": "vs-shared",
+      "inherits": "base",
+      "displayName": "VS 2022 — Shared (DLL)",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "${sourceDir}/build-vs-shared",
+      "architecture": { "value": "x64", "strategy": "set" },
+      "cacheVariables": { "CLINGLITE_BUILD_SHARED": "ON" }
+    },
+    {
+      "name": "ninja-static",
+      "inherits": "base",
+      "displayName": "Ninja — Static (Release)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build-ninja-static",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CLINGLITE_BUILD_SHARED": "OFF"
+      }
+    },
+    {
+      "name": "ninja-shared",
+      "inherits": "base",
+      "displayName": "Ninja — Shared (RelWithDebInfo)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build-ninja-shared",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CLINGLITE_BUILD_SHARED": "ON"
+      }
+    },
+    {
+      "name": "fat-static",
+      "inherits": "base",
+      "displayName": "Fat Static (Linux/macOS all-in-one, zero deps)",
+      "binaryDir": "${sourceDir}/build-fat-static",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CLINGLITE_BUILD_SHARED": "OFF",
+        "CLINGLITE_FAT_STATIC": "ON"
+      }
+    }
+  ]
+}

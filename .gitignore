@@ -1,0 +1,16 @@
+build-*/
+lib/
+sdk/
+
+# IDE / editor (keep .vscode tracked for shared workspace config)
+.vs/
+.idea/
+*.user
+*.suo
+*.swp
+*.swo
+.DS_Store
+
+# CMake
+CMakeUserPresets.json
+compile_commands.json

@@ -1,0 +1,17 @@
+{
+    "files.exclude": {
+        "**/build": true,
+        "**/build-*": true,
+        "lib": true,
+        "sdk": true,
+        "**/.DS_Store": true,
+        "**/__pycache__": true
+    },
+    "search.exclude": {
+        "**/build": true,
+        "**/build-*": true,
+        "lib": true,
+        "sdk": true,
+        "external/cling-src": true
+    }
+}
