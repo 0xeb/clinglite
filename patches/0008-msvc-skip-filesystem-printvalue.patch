@@ -1,0 +1,22 @@
+diff --git a/include/cling/Interpreter/RuntimePrintValue.h b/include/cling/Interpreter/RuntimePrintValue.h
+index 40b5db1f..6612c5e3 100644
+--- a/include/cling/Interpreter/RuntimePrintValue.h
++++ b/include/cling/Interpreter/RuntimePrintValue.h
+@@ -16,7 +16,7 @@
+ 
+ #include <cling/Interpreter/Visibility.h>
+ 
+-#if __cplusplus >= 201703L
++#if __cplusplus >= 201703L && !defined(_MSC_VER)
+ #include <filesystem>
+ #endif
+ #include <memory>
+@@ -270,7 +270,7 @@ namespace cling {
+     return collectionPrinterInternal::printValue_impl(obj);
+   }
+ 
+-#if __cplusplus >= 201703L
++#if __cplusplus >= 201703L && !defined(_MSC_VER)
+   // For std::filesystem::path
+   inline std::string printValue(const std::filesystem::path* obj) {
+     return obj->string();

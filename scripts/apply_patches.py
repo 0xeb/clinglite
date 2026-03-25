@@ -72,6 +72,8 @@ REQUIRED_PATCHES = [
 OPTIONAL_PATCHES = [
     ("0003-fix-declunloader-usingshadowdecl-crash.patch",
      "optional: fix undo() crash with using-shadow declarations"),
+    ("0008-msvc-skip-filesystem-printvalue.patch",
+     "optional: skip <filesystem> in RuntimePrintValue.h on MSVC (xlocmon mangling bug)"),
 ]
 
 
