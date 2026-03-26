@@ -11,6 +11,12 @@ sdk/
 *.swo
 .DS_Store
 
+# Python
+__pycache__/
+*.pyc
+*.so
+*.pyd
+
 # CMake
 CMakeUserPresets.json
 compile_commands.json

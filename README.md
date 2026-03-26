@@ -34,6 +34,19 @@ int main() {
 - **Symbol lookup** — resolve JIT'd or library symbols by mangled name
 - **Multiple interpreters** — run independent sessions from a single process
 - **Output capture** — redirect interpreter output and diagnostics through callbacks
+- **Plugin system** — extend the interpreter with platform-specific headers, libraries, and PCH contributions
+
+## Plugins
+
+clinglite includes a plugin system for extending the interpreter with platform-specific headers, libraries, and PCH contributions. Plugins hook into initialization and can preload headers, load shared libraries, and inject code.
+
+| Plugin | Description | Auto-enabled |
+|--------|-------------|--------------|
+| **linux** | Preloads POSIX/ELF headers (`dlfcn.h`, `elf.h`, `link.h`, ...) | Linux |
+| **winsdk** | Preloads Windows SDK headers (`windows.h`, `tlhelp32.h`, ...) | Windows |
+| **template** | Skeleton for creating new plugins | — |
+
+Downstream consumers (like [idacpp](https://github.com/0xeb/idacpp)) can register their own plugins using the same CMake helpers. See [plugins/template/](plugins/template/) for a walkthrough.
 
 ## Design
 

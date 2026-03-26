@@ -5,7 +5,7 @@
 # Requires a local Cling/LLVM build tree (from build-cling/, env var, or CMake var).
 
 cmake_minimum_required(VERSION 3.20)
-project(clinglite VERSION 0.0.1 LANGUAGES CXX)
+project(clinglite VERSION 0.0.3 LANGUAGES CXX)
 
 # LLVM/Cling libs are built Release (/MD). Force the same CRT for all build
 # types so Debug builds can link against them without LNK2038 errors.
@@ -437,7 +437,15 @@ if(NOT CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
   set(CLING_SRC_DIR                   "${CLING_SRC_DIR}"                   PARENT_SCOPE)
   set(CLINGLITE_CLANG_BUILTIN_DIR     "${CLINGLITE_CLANG_BUILTIN_DIR}"     PARENT_SCOPE)
   set(CLINGLITE_CLANG_RESOURCE_VERSION "${CLINGLITE_CLANG_RESOURCE_VERSION}" PARENT_SCOPE)
+  set(CLINGLITE_PLUGIN_PCH_FLAGS      "${CLINGLITE_PLUGIN_PCH_FLAGS}"      PARENT_SCOPE)
+  set(CLINGLITE_PLUGIN_PCH_HEADERS    "${CLINGLITE_PLUGIN_PCH_HEADERS}"    PARENT_SCOPE)
 endif()
+
+# ── Plugin system ──────────────────────────────────────────────────────────
+# Always included — generates dispatch .cpp (empty if no plugins enabled).
+# Set CLINGLITE_BUILD_PLUGINS=OFF to skip plugin discovery.
+option(CLINGLITE_BUILD_PLUGINS "Build clinglite extension plugins" ON)
+add_subdirectory(plugins)
 
 # ── Examples ───────────────────────────────────────────────────────────────
 option(CLINGLITE_BUILD_EXAMPLES "Build example programs" ON)

@@ -431,4 +431,29 @@ CLINGLITE_API std::string cppStringLiteral(const std::string& s);
 /// Escape backslashes in a path for use in C++ string literals.
 CLINGLITE_API std::string escapePath(const std::string& path);
 
+// ── Plugin system ───────────────────────────────────────────────────────────
+
+/// Undo IDA SDK pro.h macro poisoning (#undef snprintf, sprintf, getenv).
+/// Harmless no-op if macros are not defined (e.g. PCH already handled it).
+inline void undoProhPoisoning(Interpreter& interp) {
+    interp.execute("#undef snprintf");
+    interp.execute("#undef sprintf");
+    interp.execute("#undef getenv");
+}
+
+/// Options passed to plugin setup functions. Extensible for future fields.
+struct PluginSetupOptions {
+    bool hasPch = false;  ///< Whether a precompiled header was loaded
+};
+
+namespace plugins {
+
+/// Run setup for all registered extension plugins (auto-generated at build time).
+CLINGLITE_API void setupAll(Interpreter& interp, PluginSetupOptions& opts);
+
+/// Return names of all enabled extension plugins (baked at build time).
+CLINGLITE_API std::vector<std::string> pluginNames();
+
+} // namespace plugins
+
 } // namespace clinglite
